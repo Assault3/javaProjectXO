@@ -1,0 +1,200 @@
+package com.example.tic_tac_toe;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+public class HelloController {
+    public Stage stage;
+    public Scene scene;
+    public Parent root;
+    @FXML
+    private Label score1;
+
+    @FXML
+    private Label score2;
+    public void switchToGame(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("game.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void switchBack(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    void skinsButton(ActionEvent event) {
+    }
+
+    @FXML
+    private char[][] gameField = new char[3][3];
+    private boolean isGame = true;
+    private char nowSym = 'x';
+
+    public void btnCLick(ActionEvent event) {
+        Button btn = (Button) event.getSource();
+        if (!isGame || !btn.getText().isEmpty()) return;
+
+        int rowIndex = GridPane.getRowIndex(btn) == null ? 0 : GridPane.getRowIndex(btn);
+        int columnIndex = GridPane.getColumnIndex(btn) == null ? 0 : GridPane.getColumnIndex(btn);
+
+        gameField[rowIndex][columnIndex] = nowSym;
+        btn.setText(String.valueOf(nowSym));
+
+        if (checkWinner()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "We have a winner: " + nowSym, ButtonType.OK);
+            alert.showAndWait();
+            isGame = false;
+        } else {
+            nowSym = nowSym == 'x' ? 'o' : 'x';
+        }
+    }
+
+    private boolean checkWinner() {
+        for (int i = 0; i < 3; i++) {
+            if (gameField[i][0] == gameField[i][1] && gameField[i][0] == gameField[i][2] && (gameField[i][0] == 'x' || gameField[i][0] == 'o')) {
+                return true;
+            }
+            if (gameField[0][i] == gameField[1][i] && gameField[0][i] == gameField[2][i] && (gameField[0][i] == 'x' || gameField[0][i] == 'o')) {
+                return true;
+            }
+        }
+        if (gameField[0][0] == gameField[1][1] && gameField[0][0] == gameField[2][2] && (gameField[0][0] == 'x' || gameField[0][0] == 'o')) {
+            return true;
+        }
+        if (gameField[0][2] == gameField[1][1] && gameField[0][2] == gameField[2][0] && (gameField[0][2] == 'x' || gameField[0][2] == 'o')) {
+            return true;
+        }
+        return false;
+    }
+}
+
+
+
+package com.example.tic_tac_toe;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+public class HelloController {
+    public Stage stage;
+    public Scene scene;
+    public Parent root;
+    @FXML
+    private Label score1;
+
+    @FXML
+    private Label score2;
+    private int player1Score = 0;
+    private int player2Score = 0;
+    public void switchToGame(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("game.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void switchBack(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    void skinsButton(ActionEvent event) {
+    }
+
+    @FXML
+    private char[][] gameField = new char[3][3];
+    private boolean isGame = true;
+    private char nowSym = 'x';
+
+
+    public void btnCLick(ActionEvent event) {
+        Button btn = (Button) event.getSource();
+        if (!isGame || !btn.getText().isEmpty()) return;
+
+        int rowIndex = GridPane.getRowIndex(btn) == null ? 0 : GridPane.getRowIndex(btn);
+        int columnIndex = GridPane.getColumnIndex(btn) == null ? 0 : GridPane.getColumnIndex(btn);
+
+        gameField[rowIndex][columnIndex] = nowSym;
+        btn.setText(String.valueOf(nowSym));
+
+        if (checkWinner()) {
+            if(nowSym == 'x'){
+                player1Score++;
+                score1.setText(String.valueOf(player1Score));
+            }else {
+                player2Score++;
+                score2.setText(String.valueOf(player2Score));
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "We have a winner: " + nowSym, ButtonType.OK);
+            alert.showAndWait();
+            isGame = false;
+        }
+        else {
+            nowSym = nowSym == 'x' ? 'o' : 'x';
+        }
+    }
+
+    private boolean checkWinner() {
+        for (int i = 0; i < 3; i++) {
+            if (gameField[i][0] == gameField[i][1] && gameField[i][0] == gameField[i][2] && (gameField[i][0] == 'x' || gameField[i][0] == 'o')) {
+                return true;
+            }
+            if (gameField[0][i] == gameField[1][i] && gameField[0][i] == gameField[2][i] && (gameField[0][i] == 'x' || gameField[0][i] == 'o')) {
+                return true;
+            }
+        }
+        if (gameField[0][0] == gameField[1][1] && gameField[0][0] == gameField[2][2] && (gameField[0][0] == 'x' || gameField[0][0] == 'o')) {
+            return true;
+        }
+        if (gameField[0][2] == gameField[1][1] && gameField[0][2] == gameField[2][0] && (gameField[0][2] == 'x' || gameField[0][2] == 'o')) {
+            return true;
+        }
+        return false;
+    }
+    public void restartGame(ActionEvent event) {
+        for (Node node : ((GridPane) ((Node) event.getSource()).getParent()).getChildren()) {
+            if (node instanceof Button) {
+                ((Button) node).setText("");
+            }
+        }
+        gameField = new char[3][3];
+        isGame = true;
+        nowSym = 'x';
+    }
+}
